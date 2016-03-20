@@ -1,4 +1,4 @@
-version=0.16
+version=Math.random();
 appPath="./Application/";
 corePath="./WoldyPHP/"
 api_base="/WoldyPHP/api.php?r=";

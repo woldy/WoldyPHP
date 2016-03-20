@@ -4,7 +4,7 @@
 			$tpl=require('template/'.$type.'.tpl.php');
 			$apiDir=dirname($file);
 			if (!is_dir($apiDir)){ //创建目录
-				mkdir($apiDir);
+				mkdir($apiDir,0555,true);
 			} 
 			if (!file_exists($file)){ //写入文件
 				file_put_contents($file,$tpl); 

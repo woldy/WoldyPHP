@@ -32,7 +32,7 @@
 	function loadTpl(path,element,isPage){
 		$.ajax({  
          	type:'get',      
-         	url:tpl_path+path,   
+         	url:tpl_path+path+"?ver="+version,   
          	dataType:'html',  
          	success:function(data){
          		$(element).html($(element).html()+data);
@@ -94,11 +94,38 @@
         head.appendChild(link);
 	}
 
+	function getUrlParams() {
+  		var search = window.location.search;
+  		// 写入数据字典
+  		var tmparray = search.substr(1, search.length).split("&");
+  		var paramsArray = new Array;
+  		if (tmparray != null) {
+   			for (var i = 0; i < tmparray.length; i++) {
+   				var reg = /[=|^==]/;    // 用=进行拆分，但不包括==
+    			var set1 = tmparray[i].replace(reg, '&');
+    			var tmpStr2 = set1.split('&');
+    			var array = new Array;
+    			array[tmpStr2[0]] = tmpStr2[1];
+   				paramsArray.push(array);
+   			}
+  		}
+  		// 将参数数组进行返回
+  		return paramsArray;
+ 	}
+
 	//取GET方法参数
 	function get(name){
-     	var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-     	var r = window.location.search.substr(1).match(reg);
-     	if(r!=null)return  unescape(r[2]); return null;
+		var paramsArray = getUrlParams();
+  		if (paramsArray != null) {
+  			for (var i = 0; i < paramsArray.length; i++) {
+    			for (var j in paramsArray[i]) {
+     				if (j == name) {
+      					return paramsArray[i][j];
+     				}
+    			}
+   			}
+  		}
+  		return null;
 	}
 
 	//设置title
@@ -123,12 +150,12 @@
     	} 
 	}
 	
-	function Api(op,data,callback){  //框架Api调用
-		apipath=view+'/';
+	function Api(act,data,callback){  //框架Api调用
+		apipath=page+"/";
 		//console.log(op);
         $.ajax({  
             type: "post",  
-            url: api_base+apipath+op,
+            url: api_base+apipath+act,
             data: data,  
             success: callback,  
             error: function (data){
